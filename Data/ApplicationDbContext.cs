@@ -4,11 +4,13 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using KarTech.Data.Models;
+using KarTech.Seeder;
 
 namespace KarTech.Data
 {
     public class ApplicationDbContext : IdentityDbContext
     {
+       
         public DbSet<GPU> GPUs { get; set; }
         public DbSet<CPU> CPUs { get; set; }
         public DbSet<Ram> Rams { get; set; }
@@ -23,10 +25,9 @@ namespace KarTech.Data
             : base(options)
         {
         }
-
-        protected override void OnModelCreating(ModelBuilder builder)
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            builder.Entity<CPU>().HasData()
+            modelBuilder.Seed();
         }
     }
 }
