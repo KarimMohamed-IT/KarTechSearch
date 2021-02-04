@@ -17,27 +17,30 @@ namespace KarTech.Seeder
         public async Task<List<GPU>> GpuList()
         {
 
-            using (var gpuStreamReader = new StreamReader("GPU_UserBenchmarks.csv"))
+            using var gpuStreamReader = new StreamReader(@"Seeder\Files\AllGpu.csv");
+
+            //Removing the first line which is heading only
+            var titlesGetter = await gpuStreamReader.ReadLineAsync();
+
+            while (!gpuStreamReader.EndOfStream)
             {
-                //Removing the first line which is heading only
-                var titlesGetter = await gpuStreamReader.ReadLineAsync();
+                var line = await gpuStreamReader.ReadLineAsync();
+                var values = line.Split(",");
 
-                while (!gpuStreamReader.EndOfStream)
+                GPU gpu = new GPU()
                 {
-                    var line = await gpuStreamReader.ReadLineAsync();
-                    var values = line.Split(",");
-
-                    GPU gpu = new GPU()
-                    {
-                        Brand = values[2],
-                        Model = values[3],
-                        Rank = double.Parse(values[4]),
-                        Benchmark = double.Parse(values[5])
-                    };
+                    Id = int.Parse(values[0]),
+                    Brand = values[1],
+                    Model = values[2],
+                    Rank = double.Parse(values[3]),
+                    Benchmark = double.Parse($"{values[4]:f2}")
+                };
+                lock (this)
+                {
                     listGpu.Add(gpu);
                 }
-                return listGpu;
             }
+            return listGpu;
         }
     }
 }

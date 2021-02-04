@@ -1,10 +1,7 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using KarTech.Data.Models;
+﻿using KarTech.Data.Models;
 using KarTech.Seeder;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
 namespace KarTech.Data
 {
@@ -25,9 +22,12 @@ namespace KarTech.Data
             : base(options)
         {
         }
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        protected override async void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Seed();
+            base.OnModelCreating(modelBuilder);
+            await modelBuilder.SeedAsync();
+            await this.SaveChangesAsync();
         }
     }
 }
+//The entity type 'IdentityUserLogin<string>' requires a primary key to be defined. If you intended to use a keyless entity type, call 'HasNoKey' in 'OnModelCreating'.

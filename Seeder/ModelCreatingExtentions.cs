@@ -1,17 +1,22 @@
 ﻿using KarTech.Data.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace KarTech.Seeder
 {
     public static class ModelCreatingExtentions
     {
-        private static readonly GetCpuList getCpu = new GetCpuList();
-        private static readonly GetGpuList getGpu = new GetGpuList();
-
-        public static void Seed(this ModelBuilder modelBuilder)
+        public static async Task SeedAsync(this ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<CPU>().HasData(getCpu.CpuList());
-            modelBuilder.Entity<GPU>().HasData(getGpu.GpuList());
+            GetCpuList getCpu = new GetCpuList();
+            GetGpuList getGpu = new GetGpuList();
+            List<CPU> Cpus = await getCpu.CpuList();
+            List<GPU> Gpus = await getGpu.GpuList();
+            
+
+            modelBuilder.Entity<CPU>().HasData(Cpus);
+            modelBuilder.Entity<GPU>().HasData(Gpus);
         }
     }
 }
